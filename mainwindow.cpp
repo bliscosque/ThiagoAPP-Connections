@@ -30,7 +30,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btn_load_clicked()
 {
-
+    ui->table_connections->clear();
+    ui->table_connections->setRowCount(0);
     QString filePath=ui->edt_file->text();
     readData = QtCSV::Reader::readToList(filePath);
     ui->table_connections->setColumnCount(3);
@@ -50,8 +51,12 @@ void MainWindow::on_btn_load_clicked()
 }
 
 
-void generateConnection(int) {
-
+void generateConnection(int item) {
+    QMap<QString,QString> map;
+    for (int i=0;i<readData[0].length();i++) {
+        map[readData[0][i]]=readData[item][i];
+    }
+    qInfo() << map;
 }
 
 
