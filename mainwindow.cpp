@@ -68,4 +68,8 @@ void MainWindow::on_btn_connect_clicked()
     generateConnection(csvItem);
 }
 
+// exemplo de comando
+// Default WSL directory: \\wsl$\Ubuntu-22.04
+// tbm é possivel chamar explorer.exe . de dentro do WSL
+// wsl -e bash -c "/mnt/c/Users/egonthi/SYNC_WORK_PI4/clientes/general.sh /mnt/c/Users/egonthi/SYNC_WORK_PI4/clientes/Entel/entel_chile_DR_Enabler_chi3drmmenapf02.sh"
 
