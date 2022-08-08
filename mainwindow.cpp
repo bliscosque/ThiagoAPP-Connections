@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //TO-DO: save in QSettings
     ui->edt_file->setText("/home/thiago/obsidian/3-Ericsson/connections.csv");
+    ui->edt_dest->setText("/home/thiago/connection_scripts");
 }
 
 MainWindow::~MainWindow()
@@ -51,21 +52,46 @@ void MainWindow::on_btn_load_clicked()
 }
 
 
-void generateConnection(int item) {
+void generateConnection(int item, QDir dir) {
     QMap<QString,QString> map;
     for (int i=0;i<readData[0].length();i++) {
         map[readData[0][i]]=readData[item][i];
     }
     qInfo() << map;
+    // qInfo() << dir.absolutePath();
+    dir.mkdir(map["Cliente"]);
+    dir.cd(map["Cliente"]);
+    dir.mkdir(map["Pais"]);
+    dir.cd(map["Pais"]);
+
+    QFile file(dir.absolutePath()+"/"+map["ServerName"]+".sh");
+    qInfo() << file.fileName();
+
+    if (file.open(QIODevice::WriteOnly)) {
+        QTextStream stream(&file);
+        stream << "#!/usr/bin/expect -f\n";
+        stream << "set OTP [lindex $argv 0]\n";
+        stream << "set timeout -1\n";
+        stream << "spawn ssh " + map["UID"] << "@" << map["RSG"] << "\n";
+
+    }
+    else {
+        qInfo() << "Error opening file";
+    }
 }
+
 
 
 void MainWindow::on_btn_connect_clicked()
 {
+    QDir dir(ui->edt_dest->text());
+
     int row = ui->table_connections->currentRow();
     qInfo() << "selected row: " << row;
     int csvItem=row+1;
-    generateConnection(csvItem);
+    generateConnection(csvItem, dir);
+
+
 }
 
 // exemplo de comando
